@@ -3,6 +3,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import settings
 import consellation
 import ephem
+import word_counter
+import next_full_moon
 from datetime import date
 
 
@@ -24,12 +26,16 @@ PROXY = {
         {'username': settings.PROXY_USERNAME, 
         'password': settings.PROXY_PASSWORD}}
 
-# ставим обработчик команды /planet с вызовом функции из модуля consellation
+# ставим обработчик команды /wordcount с вызовом функции из модуля word_conter
+# ставим обработчик команды /next_full_moon с вызовом функции из модуля next_full_moon
+
 def main():
     mybot = Updater(settings.API_KEY, use_context=True, request_kwargs=PROXY)
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler('start', greet_user))
-    dp.add_handler(CommandHandler('planet', consellation.say_consellation))
+    dp.add_handler(CommandHandler('planet', consellation.tell_consellation))
+    dp.add_handler(CommandHandler('wordcount', word_counter.tell_amount_of_words))
+    dp.add_handler(CommandHandler('next_full_moon', next_full_moon.tell_next_full_moon_date))
 
     logging.info('Бот стартовал')
     mybot.start_polling()

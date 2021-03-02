@@ -8,9 +8,8 @@ from datetime import date
 Можно разбить на более мелкие фунции, чтобы не делать много действий в одной? 
 """
 def tell_consellation(update, context): 
-    user_text = update.message.text
-    planet_name = user_text.split()
-    consellation_name = calculate_consellation(planet_name[1])
+    user_planet = context.args[0]
+    consellation_name = calculate_consellation(user_planet)
     update.message.reply_text(consellation_name)
 
 """
@@ -62,8 +61,13 @@ planets = {
 }
 
 def calculate_consellation(planet):
-    if planet in planets:
-        return ephem.constellation(planets[planet])
+    planet = planets.get(planet, '#')
+    return ephem.constellation(planet)
 
 # Способ 3 (через getattr)
 
+# def calculate_consellation(planet_name):
+#     date = get_date()
+#     planet = getattr(ephem, planet_name)()
+#     planet.compute(date)
+#     return ephem.constellation(planet)

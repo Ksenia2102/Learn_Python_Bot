@@ -3,9 +3,8 @@ from datetime import date
 
 
 def tell_next_full_moon_date(update, context): 
-    user_text = update.message.text
-    user_date = user_text.split()
-    next_full_moon_date = count_next_full_moon(user_date[1])
+    user_date = context.args[0]
+    next_full_moon_date = count_next_full_moon(user_date)
     update.message.reply_text(next_full_moon_date)
 
 def change_date(date):

@@ -1,6 +1,7 @@
 from random import randint, choice
 from glob import glob
 from emoji import emojize
+from bot import main_keyboard
 
 """
 Команды уроков по треку Телеграм-Бот
@@ -31,8 +32,6 @@ def play_random_number(user_number):
 # отсылаем рандомную фотку котика /cat
 def send_cat_image(update, context):
     cat_img_list = glob('img/cat*.jp*')
-    print(cat_img_list)
     cat_img = choice(cat_img_list)
-    print(cat_img)
     chat_id = update.effective_chat.id
-    context.bot.send_photo(chat_id=chat_id, photo=open(cat_img, 'rb'))
+    context.bot.send_photo(chat_id=chat_id, photo=open(cat_img, 'rb'), reply_markup = main_keyboard())

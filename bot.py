@@ -1,6 +1,6 @@
 import logging
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
-from handlers import greet_user, guess_number, send_cat_image, user_cordinates
+from handlers import greet_user, guess_number, send_cat_image, user_cordinates, check_user_photo
 
 from calculator import tell_result_of_calculation
 from cities_game import play_cities
@@ -31,6 +31,7 @@ def main():
     dp.add_handler(CommandHandler('cat', send_cat_image))
     dp.add_handler(CommandHandler('cities', play_cities))
     dp.add_handler(CommandHandler('calc', tell_result_of_calculation))
+    dp.add_handler(MessageHandler(Filters.photo, check_user_photo))
     dp.add_handler(MessageHandler(Filters.location, user_cordinates))
     dp.add_handler(MessageHandler(Filters.regex('^(Прислать котика)$'), send_cat_image))
 

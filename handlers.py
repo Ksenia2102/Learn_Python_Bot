@@ -1,17 +1,21 @@
 from glob import glob
 import os
+
+from db import db, get_or_create_user, subscribe_user, unsubscribe_user
 from random import choice, randint
 from emoji import emojize
-from utils import get_smile, play_random_number, main_keyboard, is_cat
+from utils import play_random_number, main_keyboard, is_cat
+from jobs import alarm
 
 def greet_user(update, context):
-    context.user_data['emoji'] = get_smile(context.user_data)
+    user = get_or_create_user(db, update.effective_user, update.message.chat.id)
     update.message.reply_text(
-        f'Привет, пользователь! {context.user_data["emoji"]}',
+        f'Привет, пользователь! {user["emoji"]}',
         reply_markup = main_keyboard()
     )
 
 def user_cordinates(update, context):
+    user = get_or_create_user(db, update.effective_user, update.message.chat.id)
     cords = update.message.location
     update.message.reply_text(
         f'Ваши координаты: {cords}',
@@ -19,12 +23,14 @@ def user_cordinates(update, context):
     )
 
 def send_cat_image(update, context):
+    user = get_or_create_user(db, update.effective_user, update.message.chat.id)
     cat_img_list = glob('img/cat*.jp*')
     cat_img = choice(cat_img_list)
     chat_id = update.effective_chat.id
     context.bot.send_photo(chat_id=chat_id, photo=open(cat_img, 'rb'), reply_markup = main_keyboard())
 
 def guess_number(update, context):
+    user = get_or_create_user(db, update.effective_user, update.message.chat.id)
     if context.args:
         try:
             user_number = int(context.args[0])
@@ -36,6 +42,7 @@ def guess_number(update, context):
     update.message.reply_text(message)
 
 def check_user_photo(update, context):
+    user = get_or_create_user(db, update.effective_user, update.message.chat.id)
     update.message.reply_text('Фото в обработке')
     os.makedirs('downloads', exist_ok=True)
     user_photo = context.bot.get_file(update.message.photo[-1].file_id)
@@ -48,3 +55,22 @@ def check_user_photo(update, context):
     else:
         os.remove(file_name)
         update.message.reply_text('На фото нет котика!')
+
+def subscribe(update, context):
+    user = get_or_create_user(db, update.effective_user, update.message)
+    subscribe_user(db, user)
+    update.message.reply_text('Вы успешно подписались')
+
+
+def unsubscribe(update, context):
+    user = get_or_create_user(db, update.effective_user, update.message)
+    unsubscribe_user(db, user)
+    update.message.reply_text('Вы отписались от рассылки')
+
+def set_alarm(update, context):
+    try:
+        alarm_seconds = abs(int(context.args[0]))
+        context.job_queue.run_once(alarm, alarm_seconds, context=update.message.chat.id)
+        update.message.reply_text(f'Уведомление придет через {alarm_seconds} сек')
+    except (ValueError, TypeError):
+        update.message.reply_text('Введите число')

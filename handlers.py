@@ -1,10 +1,10 @@
 from glob import glob
 import os
 
-from db import db, get_or_create_user, subscribe_user, unsubscribe_user
+from db import db, get_or_create_user, subscribe_user, unsubscribe_user, save_cat_image_vote, user_voted, get_image_rating
 from random import choice, randint
 from emoji import emojize
-from utils import play_random_number, main_keyboard, is_cat
+from utils import play_random_number, main_keyboard, is_cat, cat_rating_inline_keyboard
 from jobs import alarm
 
 def greet_user(update, context):
@@ -27,7 +27,24 @@ def send_cat_image(update, context):
     cat_img_list = glob('img/cat*.jp*')
     cat_img = choice(cat_img_list)
     chat_id = update.effective_chat.id
-    context.bot.send_photo(chat_id=chat_id, photo=open(cat_img, 'rb'), reply_markup = main_keyboard())
+    if user_voted(db, cat_img, user["user_id"]):
+        rating = get_image_rating(db, cat_img)
+        keyboard = None
+        caption = f'Рейтинг картинки: {rating}'
+    else: 
+        keyboard = cat_rating_inline_keyboard(cat_img)
+        caption = None
+    
+    context.bot.send_photo(chat_id=chat_id, photo=open(cat_img, 'rb'), reply_markup=keyboard, caption=caption)
+
+def cat_picture_rating(update, context):
+    update.callback_query.answer()
+    callback_type, image_name, vote = update.callback_query.data.split('|')
+    vote = int(vote)
+    user = get_or_create_user(db, update.effective_user, update.effective_chat.id)
+    save_cat_image_vote(db, user, image_name, vote)
+    rating = get_image_rating(db, image_name)
+    update.callback_query.edit_message_caption(caption=f'Рейтинг картинки: {rating}')
 
 def guess_number(update, context):
     user = get_or_create_user(db, update.effective_user, update.message.chat.id)

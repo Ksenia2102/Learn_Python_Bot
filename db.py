@@ -1,6 +1,7 @@
-from random import choice
-from emoji import emojize
 from datetime import datetime
+from random import choice
+
+from emoji import emojize
 from pymongo import MongoClient
 
 from settings import MONGO_DB, MONGO_LINK, USER_EMOJI

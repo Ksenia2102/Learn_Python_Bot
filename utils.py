@@ -1,6 +1,9 @@
 from random import randint
-from telegram import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
+
 from clarifai.rest import ClarifaiApp
+from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
+                      KeyboardButton, ReplyKeyboardMarkup)
+
 import settings
 
 
@@ -14,9 +17,11 @@ def play_random_number(user_number):
         message = 'Ваше число меньше, вы проиграли'
     return message
 
+
 def main_keyboard():
     return ReplyKeyboardMarkup([
         ['Прислать котика', KeyboardButton('Мои координаты', request_location=True), 'Заполнить анкету']], resize_keyboard=True)
+
 
 def is_cat(file_name):
     app = ClarifaiApp(api_key=settings.CLARIFAI_API_KEY)
@@ -28,6 +33,7 @@ def is_cat(file_name):
                 return True
     return False
 
+
 def cat_rating_inline_keyboard(image_name):
     callback_text = f'rating|{image_name}|'
     inlinekeyboard = [
@@ -37,6 +43,7 @@ def cat_rating_inline_keyboard(image_name):
         ]
     ]
     return InlineKeyboardMarkup(inlinekeyboard)
+
 
 if __name__ == '__main__':
     print(is_cat('img\cat1.jpg'))

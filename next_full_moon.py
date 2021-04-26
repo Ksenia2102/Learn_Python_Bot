@@ -7,9 +7,11 @@ def tell_next_full_moon_date(update, context):
     next_full_moon_date = count_next_full_moon(user_date)
     update.message.reply_text(next_full_moon_date)
 
+
 def change_date(date):
     date = date.replace('-', '/')
     return date
+
 
 def count_next_full_moon(date):
     date = change_date(date)

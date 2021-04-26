@@ -59,5 +59,6 @@ def format_form(form):
         user_text += f"<b>Комментарий</b>: {form['comment']}"
     return user_text
 
+
 def form_dontknow(update, context):
     update.message.reply_text('Я вас не понимаю')

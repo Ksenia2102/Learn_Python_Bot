@@ -1,19 +1,17 @@
-"""
-Функция принимает ответ пользователя и выводит кол-во введенных слов
-"""
+
 def tell_amount_of_words(update, context):
     print(context.__dict__)
     user_words = context.args
     words_amount_answer = count_words(user_words)
     update.message.reply_text(words_amount_answer)
 
+
 def check_is_word(word):
     for letter in word:
         if letter.isalpha():
             return True
-"""
-Функция считает кол-во слов в введенном предложении
-"""
+
+
 def count_words(words): 
     words_counter = 0
     for word in words:

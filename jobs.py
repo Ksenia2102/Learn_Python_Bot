@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from telegram.error import BadRequest 
+from telegram.error import BadRequest
 
 from db import db, get_subscribed
 

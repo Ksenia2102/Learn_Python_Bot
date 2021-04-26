@@ -1,11 +1,15 @@
-from glob import glob
 import os
-
-from db import db, get_or_create_user, subscribe_user, unsubscribe_user, save_cat_image_vote, user_voted, get_image_rating
+from glob import glob
 from random import choice, randint
+
 from emoji import emojize
-from utils import play_random_number, main_keyboard, is_cat, cat_rating_inline_keyboard
+
+from db import (db, get_image_rating, get_or_create_user, save_cat_image_vote,
+                subscribe_user, unsubscribe_user, user_voted)
 from jobs import alarm
+from utils import (cat_rating_inline_keyboard, is_cat, main_keyboard,
+                   play_random_number)
+
 
 def greet_user(update, context):
     user = get_or_create_user(db, update.effective_user, update.message.chat.id)
@@ -73,6 +77,7 @@ def check_user_photo(update, context):
         os.remove(file_name)
         update.message.reply_text('На фото нет котика!')
 
+
 def subscribe(update, context):
     user = get_or_create_user(db, update.effective_user, update.message)
     subscribe_user(db, user)
@@ -83,6 +88,7 @@ def unsubscribe(update, context):
     user = get_or_create_user(db, update.effective_user, update.message)
     unsubscribe_user(db, user)
     update.message.reply_text('Вы отписались от рассылки')
+
 
 def set_alarm(update, context):
     try:

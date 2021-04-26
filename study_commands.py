@@ -1,11 +1,9 @@
-from random import randint, choice
 from glob import glob
-from emoji import emojize
-from bot import main_keyboard
+from random import choice, randint
 
-"""
-Команды уроков по треку Телеграм-Бот
-"""
+from emoji import emojize
+
+from bot import main_keyboard
 
 # игра угадай число /guess
 def guess_number(update, context):
@@ -18,6 +16,7 @@ def guess_number(update, context):
     else: 
         message = 'Введите число'
     update.message.reply_text(message)
+
 
 def play_random_number(user_number):
     bot_number = randint(user_number - 10, user_number + 10)

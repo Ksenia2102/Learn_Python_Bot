@@ -1,10 +1,11 @@
 import logging
 from datetime import time
-import pytz
 
+import pytz
 from telegram.bot import Bot
-from telegram.ext import (CommandHandler, ConversationHandler, Filters,
-                          MessageHandler, Updater, CallbackQueryHandler)
+from telegram.ext import (CallbackQueryHandler, CommandHandler,
+                          ConversationHandler, Filters, MessageHandler,
+                          Updater)
 from telegram.ext import messagequeue as mq
 from telegram.ext.jobqueue import Days
 from telegram.utils.request import Request
@@ -15,9 +16,9 @@ from cities_game import play_cities
 from consellation import tell_consellation
 from form import (form_comment, form_dontknow, form_name, form_rating,
                   form_skip, form_start)
-from handlers import (check_user_photo, greet_user, guess_number,
-                      send_cat_image, set_alarm, subscribe, unsubscribe,
-                      user_cordinates, cat_picture_rating)
+from handlers import (cat_picture_rating, check_user_photo, greet_user,
+                      guess_number, send_cat_image, set_alarm, subscribe,
+                      unsubscribe, user_cordinates)
 from jobs import send_updates
 from next_full_moon import tell_next_full_moon_date
 from word_counter import tell_amount_of_words
